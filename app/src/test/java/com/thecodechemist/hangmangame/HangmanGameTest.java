@@ -10,10 +10,12 @@ import static org.junit.Assert.*;
 public class HangmanGameTest {
 
     public static HangmanGame hangmanGame;
+    public static Random random;
 
     @BeforeClass
     public static void setup() {
         hangmanGame = new HangmanGame();
+        random = new Random();
     }
 
     @Test
@@ -26,13 +28,49 @@ public class HangmanGameTest {
 
     @Test
     public void test_getWordOfRandomLength() {
-        Random random = new Random();
         int wordLength = random.nextInt(5) + 5;
         String word = hangmanGame.getNewWord(wordLength);
 
         assertEquals(wordLength, word.length());
     }
 
+    @Test
+    public void test_createClue() {
+        String word = hangmanGame.getNewWord();
+        String clue = hangmanGame.createClue(word);
+
+        assertEquals("----", clue);
+    }
+
+    @Test
+    public void test_createClueAfterFirstCorrectGuess() {
+        String word = hangmanGame.getNewWord();
+        String clue = hangmanGame.createClue(word);
+        clue = hangmanGame.createClue(word, clue, 'r');
+
+
+        assertEquals("--r-", clue);
+    }
+
+    @Test
+    public void test_createClueAfterIncorrectGuess() {
+        String word = hangmanGame.getNewWord();
+        String clue = hangmanGame.createClue(word);
+        clue = hangmanGame.createClue(word, clue, 'x');
+
+
+        assertEquals("----", clue);
+    }
+
+    @Test
+    public void test_createClueAfterSecondGuess() {
+        String word = hangmanGame.getNewWord();
+        String clue = hangmanGame.createClue(word);
+        clue = hangmanGame.createClue(word, clue, 'r');
+        clue = hangmanGame.createClue(word, clue, 'w');
+
+        assertEquals("w-r-", clue);
+    }
 
 
 }
